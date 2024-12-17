@@ -1,0 +1,1 @@
+docker run -it -v .:/usr/src/ jpbonch/os
