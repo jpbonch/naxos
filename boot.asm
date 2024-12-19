@@ -27,7 +27,11 @@ _start:
     mov dh, 0x00
     mov cl, 0x02
     mov dl, [BOOT_DISK]
-    int 0x13            
+    int 0x13      
+
+    mov ah, 0x0
+    mov al, 0x3
+    int 0x10          
 
     ; call print_message
     

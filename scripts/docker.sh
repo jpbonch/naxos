@@ -1,7 +1,7 @@
 CONTAINER=$(docker ps --format '{{.Names}}' | head -n 1)
 
 if [ -z "$CONTAINER" ]; then
-    echo "No running containers found."
+    docker run -it -v .:/usr/naxos/ jpbonch/os
     exit 1
 fi
 
