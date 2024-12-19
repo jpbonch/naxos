@@ -1,18 +1,6 @@
-void print(const char* str) {
-    while (*str) {
-        asm volatile (
-            "movb %0, %%al\n"
-            "movb $0x0E, %%ah\n"
-            "int $0x10\n"
-            :
-            : "r"(*str)
-            : "rax"
-        );
-        str++;
-    }
-}
-
-void main() {
-    print("Hello from the kernel!\n");
-    while (1) { }
+extern void main(){
+    char *vga = (char*)0xb8000;
+    vga[0] = 'Q';      // Character
+    vga[1] = 0x07;     // Attribute byte (light gray on black)
+    return;
 }
