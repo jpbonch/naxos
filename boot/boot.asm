@@ -32,8 +32,6 @@ _start:
     mov ah, 0x0
     mov al, 0x3
     int 0x10          
-
-    ; call print_message
     
     cli
     lgdt [GDT_descriptor]
@@ -43,20 +41,6 @@ _start:
     jmp CODE_SEG:start_protected_mode
 
     jmp $
-
-print_message:
-    mov si, msg          ; Load address of message into SI
-.print_char:
-    lodsb                ; Load next byte from [SI] into AL
-    cmp al, 0            ; Check if end of string (null terminator)
-    je .done             ; If zero, we're done
-    mov ah, 0x0E         ; BIOS teletype output function
-    int 0x10             ; Call BIOS interrupt to print character
-    jmp .print_char      ; Loop to print next character
-.done:
-    mov ah, 0x0E         ; BIOS teletype output function
-    int 0x10             ; Call BIOS interrupt to print character
-    ret
 
 msg db 'Booting...', 0x0D, 0xA, 0       ; Message to display, null-terminated
 
