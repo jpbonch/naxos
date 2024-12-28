@@ -1,9 +1,16 @@
 all: run
+
 VAR1 = qemu-system-i386 -drive format=raw,file=build/os.bin,index=0,media=disk -nographic -serial mon:stdio -curses
 VAR2 = qemu-system-i386 -drive format=raw,file=build/os.bin,index=0,media=disk -nographic -s -S -serial mon:stdio -curses
 
-build/kernel.bin: build/boot.o build/main.o build/puts.o build/kernel_entry.o
-	ld -m elf_i386 -T linker.ld -o build/kernel.elf build/kernel_entry.o build/main.o build/puts.o
+kernel_make:
+	make -C kernel
+
+boot_make:
+	make -C boot
+
+build/kernel.bin: kernel_make boot_make
+	ld -m elf_i386 -T linker.ld -o build/kernel.elf build/kernel_entry.o build/main.o build/puts.o build/proc.o
 	objcopy -O binary build/kernel.elf build/kernel.bin
 	cat build/boot.o build/kernel.bin > build/os.bin
 

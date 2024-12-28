@@ -1,7 +1,16 @@
-all: ../build/main.o ../build/puts.o
+# List of source files
+SRC_FILES := src/main.c src/puts.c src/proc.c
 
-../build/main.o: src/main.c
-	gcc -g -ffreestanding -m32 -c src/main.c -o ../build/main.o -fno-pie -Iinclude
+# Automatically generate a list of object files in ../build/
+OBJ_FILES := $(patsubst src/%.c,../build/%.o,$(SRC_FILES))
 
-../build/puts.o: src/puts.c
-	gcc -g -ffreestanding -m32 -c src/puts.c -o ../build/puts.o -fno-pie -Iinclude
+# Default target
+all: $(OBJ_FILES)
+
+# Pattern rule for compiling .c files into .o files
+../build/%.o: src/%.c
+	gcc -g -ffreestanding -m32 -c $< -o $@ -fno-pie -Iinclude
+
+# Clean up build artifacts
+clean:
+	rm -f $(OBJ_FILES)

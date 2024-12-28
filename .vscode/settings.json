@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "puts.h": "c"
+        "puts.h": "c",
+        "proc.h": "c"
     }
 }
