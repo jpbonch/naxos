@@ -10,7 +10,6 @@ extern void main() {
 }
 
 //todo:
-// fix print hex
 // finish page allocation
 // find first address after kernel and free unti llast address
 // create user proc

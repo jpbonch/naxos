@@ -88,10 +88,10 @@ void puts(const char* str, ...) {
             int value = va_arg(args, int);
             putint(value);
             i++;
-        // } else if (str[i] == '%' && str[i+1] == 'x') {
-        //     int value = va_arg(args, int);
-        //     puthex(value);
-        //     i++;
+        } else if (str[i] == '%' && str[i+1] == 'x') {
+            int value = va_arg(args, int);
+            puthex(value);
+            i++;
         } else {
             putc(str[i]);
         }  

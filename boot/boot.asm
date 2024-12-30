@@ -19,7 +19,7 @@ _start:
     mov sp, 0x7C00       ; Set stack pointer to 0x7C00
 
     mov bx, KERNEL_LOCATION
-    mov dh, 2
+    mov dh, 0x10
 
     mov ah, 0x02
     mov al, dh 

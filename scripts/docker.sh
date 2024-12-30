@@ -1,7 +1,7 @@
 CONTAINER=$(docker ps --format '{{.Names}}' | head -n 1)
 
 if [ -z "$CONTAINER" ]; then
-    docker run -it -v .:/usr/naxos/ jpbonch/os
+    docker run -it -v .:/usr/src/naxos/ jpbonch/os
     exit 1
 fi
 
