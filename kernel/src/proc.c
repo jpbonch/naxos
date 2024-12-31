@@ -18,8 +18,10 @@ void free_page(char* addr) {
 
 
 void init_mem() {
-    for (int i = 0x4000; i < 0x6000; i += PGSIZE) {
-        puts("Freeing page %d\n", i);
+    for (int i = 0x100000; i < 0xFFFFFFFF; i += PGSIZE) {
+        if (i % 0x10000000 == 0) {
+            puts("%x\n", i);
+        }
         free_page((char*) i);
     }
 }
@@ -28,7 +30,7 @@ void init_mem() {
 char* alloc_page() {
     char* ret = (char*) freelist;
     freelist = freelist->next;
-    // puts("allocing %d", (int)ret);
+    puts("allocing %d", (int)ret);
     return ret;
 }
 

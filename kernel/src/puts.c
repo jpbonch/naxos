@@ -19,6 +19,18 @@ void init_vga() {
 }
 
 void putc(char c) {
+    //scroll
+    if ((int)vga > 0xB8FA0) {
+        for (int i = 0xB8000; i < 0xB8FA0 - 80 * 2; i++) {
+            *(char*)i = *(char*)(i+80*2);
+        }
+        for (int i = 0xB8FA0 - 80 * 2; i < 0xB8FA0; i++) {
+            *(char*)i = ' ';
+            *(char*)(i+1) = 0x07;
+        }
+        vga = (char*)(0xB8FA0 - 80 * 2);
+    }
+
     if (c == '\n') {  // Handle newlines
         unsigned int offset = (vga - (char*)0xB8000) / 2;  // Current character position
         unsigned int next_line_offset = (offset / 80 + 1) * 80; // Move to next line

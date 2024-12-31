@@ -6,10 +6,11 @@ extern void main() {
     puts("Hello, world!\n");
     puts("Welcome to VGA text mode.\n");
     init_mem();
+    alloc_page();
     return;
 }
 
 //todo:
-// finish page allocation
+// fix print scroll and green
 // find first address after kernel and free unti llast address
 // create user proc
