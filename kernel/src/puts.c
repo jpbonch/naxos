@@ -10,6 +10,12 @@ typedef char* va_list;
 
 #define va_end(ap) (ap = NULL)
 
+#define FIRST_CHAR 0xB8000
+
+#define PAST_LAST_CHAR 0xB8FA0
+
+#define LAST_LINE_FIRST 0xB8F00
+
 void init_vga() {
     vga = (char*)0xB8000;
     for (int i = 0; i < 80 * 25; i++) {  // 80 columns x 25 rows
@@ -20,11 +26,11 @@ void init_vga() {
 
 void putc(char c) {
     //scroll
-    if ((int)vga > 0xB8FA0) {
-        for (int i = 0xB8000; i < 0xB8FA0 - 80 * 2; i++) {
+    if ((int)vga >= PAST_LAST_CHAR) {
+        for (int i = FIRST_CHAR; i < LAST_LINE_FIRST; i++) {
             *(char*)i = *(char*)(i+80*2);
         }
-        for (int i = 0xB8FA0 - 80 * 2; i < 0xB8FA0; i++) {
+        for (int i = LAST_LINE_FIRST; i < PAST_LAST_CHAR; i+=2) {
             *(char*)i = ' ';
             *(char*)(i+1) = 0x07;
         }
