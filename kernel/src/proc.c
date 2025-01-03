@@ -1,59 +1,14 @@
 #include "proc.h"
 #include "puts.h"
-
-#define PGSIZE 4096
-
-#define INITIAL_PAGES 10 // hihgest addr is 0xFFFFFFFF
-
-struct page {
-    struct page* next;
-} page;
-
-struct page* freelist = 0;
+#include "mem.h"
 
 struct proc* curproc = 0;
-
 int pid = 0;
-
 struct proc proctable[MAX_PROCS];
 
 extern char _binary____build_init_elf_start[];
 extern char _binary____build_init_elf_end[];
 
-void memcpy(char* src, char* dest, unsigned int size) {
-    for (int i = 0; i < size; i++) {
-        *(dest+i) = *(src+i);
-    }
-}
-
-void memset(char* dest, unsigned int size, int val) {
-    for (int i = 0; i < size; i++) {
-        *(dest+i) = val;
-    }
-}
-
-void free_page(char* addr) {
-    struct page* newpage = (struct page*) addr;
-    newpage->next = freelist;
-    freelist = newpage;
-    memset((char*)newpage, PGSIZE, 0);
-}
-
-
-void init_mem() {
-    for (int i = 0x100000; i < 0x100000 + INITIAL_PAGES * PGSIZE; i += PGSIZE) {
-        free_page((char*) i);
-    }
-    puts("Finished initializing memory\n");
-}
-
-
-char* alloc_page() {
-    char* ret = (char*) freelist;
-    freelist = freelist->next;
-    puts("allocing %x\n", (int)ret);
-    return ret;
-}
 
 void init_user() {
     struct proc* p = allocproc();

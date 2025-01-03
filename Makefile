@@ -10,7 +10,7 @@ boot_make:
 	make -C boot
 
 build/kernel.bin: kernel_make boot_make
-	ld -m elf_i386 -T linker.ld -o build/kernel.elf build/kernel_entry.o build/main.o build/puts.o build/proc.o build/init_elf.o
+	ld -m elf_i386 -T linker.ld -o build/kernel.elf build/kernel_entry.o build/main.o build/puts.o build/proc.o build/mem.o build/init_elf.o
 	objcopy -O binary build/kernel.elf build/kernel.bin
 	cat build/boot.o build/kernel.bin > build/os.bin
 

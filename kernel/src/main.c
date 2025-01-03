@@ -1,5 +1,6 @@
 #include "puts.h"
 #include "proc.h"
+#include "mem.h"
 
 extern void main() {
     init_vga();
