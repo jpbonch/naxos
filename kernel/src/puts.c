@@ -48,7 +48,7 @@ void putc(char c) {
     vga += 2;         // Move to the next character cell
 }
 
-void puthex(int num) {
+void puthex(unsigned int num) {
     putc('0');
     putc('x');
 
@@ -107,7 +107,7 @@ void puts(const char* str, ...) {
             putint(value);
             i++;
         } else if (str[i] == '%' && str[i+1] == 'x') {
-            int value = va_arg(args, int);
+            unsigned int value = va_arg(args, unsigned int);
             puthex(value);
             i++;
         } else {

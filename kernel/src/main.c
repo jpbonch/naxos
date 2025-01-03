@@ -6,7 +6,8 @@ extern void main() {
     puts("Hello, world!\n");
     puts("Welcome to VGA text mode.\n");
     init_mem();
-    alloc_page();
+    init_user();
+    scheduler();
     return;
 }
 
