@@ -8,6 +8,7 @@ void init_mem();
 char* alloc_page();
 void scheduler();
 struct proc* allocproc();
+void exec(char* path);
 
 enum procstate { UNUSED, RUNNABLE, RUNNING };
 
@@ -56,6 +57,7 @@ typedef struct {
     Elf32_Word p_align;
 } Elf32_Phdr;
 
+void load_elf(Elf32_Ehdr* ehdr);
 
 #endif
 

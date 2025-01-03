@@ -19,20 +19,7 @@ void init_user() {
     memcpy(_binary____build_init_elf_start, newpage, size);
 
     Elf32_Ehdr* ehdr = (Elf32_Ehdr*) newpage;
-    Elf32_Phdr* phdr = (Elf32_Phdr*) ((char*)ehdr + ehdr->e_phoff);
-
-    for (int i = 0; i < ehdr->e_phnum; i++) {
-    if (phdr[i].p_type == PT_LOAD) {
-        char* src = (char*)ehdr + phdr[i].p_offset;
-        char* dst = (char*) phdr[i].p_vaddr;
-        memcpy(src, dst, phdr[i].p_filesz);
-
-        if (phdr[i].p_memsz > phdr[i].p_filesz) {
-            memset(dst + phdr[i].p_filesz, 0,
-                   phdr[i].p_memsz - phdr[i].p_filesz);
-        }
-        }
-    }
+    load_elf(ehdr);
 
     p->eip = ehdr->e_entry;
     p->esp = (int)stack;
@@ -70,6 +57,24 @@ struct proc* allocproc() {
     return 0;
 }
 
-void exec(char* path) {
+void load_elf(Elf32_Ehdr* ehdr) {
+    Elf32_Phdr* phdr = (Elf32_Phdr*) ((char*)ehdr + ehdr->e_phoff);
 
+    for (int i = 0; i < ehdr->e_phnum; i++) {
+    if (phdr[i].p_type == PT_LOAD) {
+        char* src = (char*)ehdr + phdr[i].p_offset;
+        char* dst = (char*) phdr[i].p_vaddr;
+        memcpy(src, dst, phdr[i].p_filesz);
+
+        if (phdr[i].p_memsz > phdr[i].p_filesz) {
+            memset(dst + phdr[i].p_filesz, 0,
+                   phdr[i].p_memsz - phdr[i].p_filesz);
+        }
+        }
+    }
+}
+
+void exec(char* path) {
+    Elf32_Ehdr* ehdr;
+    load_elf(ehdr);
 }

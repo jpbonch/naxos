@@ -7,24 +7,12 @@ struct page {
 
 struct page* freelist = 0;
 
-
-void memcpy(char* src, char* dest, unsigned int size) {
-    for (int i = 0; i < size; i++) {
-        *(dest+i) = *(src+i);
-    }
-}
-
-void memset(char* dest, unsigned int size, int val) {
-    for (int i = 0; i < size; i++) {
-        *(dest+i) = val;
-    }
-}
-
 void free_page(char* addr) {
+    memset(addr, PGSIZE, 0);
     struct page* newpage = (struct page*) addr;
     newpage->next = freelist;
     freelist = newpage;
-    memset((char*)newpage, PGSIZE, 0);
+    
 }
 
 void init_mem() {
@@ -39,4 +27,16 @@ char* alloc_page() {
     freelist = freelist->next;
     puts("allocing %x\n", (int)ret);
     return ret;
+}
+
+void memcpy(char* src, char* dest, unsigned int size) {
+    for (int i = 0; i < size; i++) {
+        *(dest+i) = *(src+i);
+    }
+}
+
+void memset(char* dest, unsigned int size, int val) {
+    for (int i = 0; i < size; i++) {
+        *(dest+i) = val;
+    }
 }
