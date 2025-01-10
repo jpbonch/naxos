@@ -19,7 +19,7 @@ _start:
     mov sp, 0x7C00       ; Set stack pointer to 0x7C00
 
     mov bx, KERNEL_LOCATION
-    mov dh, 0x10
+    mov dh, 0x20   ; Sectors to read, first 16 kernel next 16 fs
 
     mov ah, 0x02
     mov al, dh 
@@ -82,7 +82,7 @@ start_protected_mode:
 	mov fs, ax
 	mov gs, ax
 	
-	mov ebp, 0x90000		; 32 bit stack base pointer
+	mov ebp, 0xA0000		; 32 bit stack base pointer
 	mov esp, ebp
 
     jmp KERNEL_LOCATION

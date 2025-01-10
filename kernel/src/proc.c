@@ -1,6 +1,7 @@
 #include "proc.h"
 #include "puts.h"
 #include "mem.h"
+#include "elf.h"
 
 struct proc* curproc = 0;
 int pid = 0;
@@ -22,7 +23,8 @@ void init_user() {
     load_elf(ehdr);
 
     p->eip = ehdr->e_entry;
-    p->esp = (int)stack;
+    p->esp = (int)stack + PGSIZE - 1;
+    p->pagestart = newpage;
     p->state = RUNNABLE;
 }
 
@@ -72,9 +74,4 @@ void load_elf(Elf32_Ehdr* ehdr) {
         }
         }
     }
-}
-
-void exec(char* path) {
-    Elf32_Ehdr* ehdr;
-    load_elf(ehdr);
 }

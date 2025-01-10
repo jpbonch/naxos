@@ -1,5 +1,5 @@
 # List of source files
-SRC_FILES := src/main.c src/puts.c src/proc.c src/init.c src/mem.c
+SRC_FILES := src/main.c src/puts.c src/proc.c src/init.c src/mem.c src/fs.c src/exec.c src/syscall.c src/idt.c
 
 # Automatically generate a list of object files in ../build/
 OBJ_FILES := $(patsubst src/%.c,../build/%.o,$(SRC_FILES))
