@@ -19,7 +19,7 @@ _start:
     mov sp, 0x7C00       ; Set stack pointer to 0x7C00
 
     mov bx, KERNEL_LOCATION
-    mov dh, 0x20   ; Sectors to read, first 16 kernel next 16 fs
+    mov dh, 0x36   ; 54 Sectors to read, first 36 kernel next 18 fs
 
     mov ah, 0x02
     mov al, dh 

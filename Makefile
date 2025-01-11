@@ -12,19 +12,20 @@ boot_make:
 build/kernel.bin: kernel_make boot_make
 	ld -m elf_i386 -T linker.ld -o build/kernel.elf \
 		build/kernel_entry.o build/main.o build/puts.o \
-		build/proc.o build/mem.o build/init_elf.o build/fs.o build/exec.o build/syscall.o build/idt.o
+		build/proc.o build/mem.o build/uinit build/fs.o build/exec.o build/syscall.o build/idt.o
 	objcopy -O binary build/kernel.elf build/kernel.bin
 
 build/os.bin: build/kernel.bin
 	# Create epicos.bin with bootloader and kernel
 	cat build/boot.o build/kernel.bin > build/epicos.bin
-	dd if=/dev/zero bs=512 count=16 >> build/epicos.bin  # Ensure at least 16 sectors
-	truncate -s $$((17 * 512)) build/epicos.bin            # Ensure exactly 17 sectors
+	dd if=/dev/zero bs=512 count=36 >> build/epicos.bin 
+	truncate -s $$((37 * 512)) build/epicos.bin         
 
+	make -C user
 	# Prepare filesystem header
 	python3 user/makefs.py
 
-	cat build/epicos.bin build/filesystem_header.bin > build/os.bin
+	cat build/epicos.bin build/filesystem.bin > build/os.bin
 
 
 run: build/os.bin
@@ -35,3 +36,5 @@ run: build/os.bin
 
 clean:
 	rm -f build/*
+	rm -f user/build/*
+	rm -f user/elf/*

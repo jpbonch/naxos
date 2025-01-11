@@ -6,11 +6,11 @@
 
 extern void main() {
     init_vga();
+    init_fs();
     puts("Hello, world!\n");
     puts("Welcome to VGA text mode.\n");
     load_idt();
     init_mem();
-    init_fs();
     init_user();
     scheduler();
     return;
@@ -18,4 +18,6 @@ extern void main() {
 
 //todo:
 // kernel stack for each process
-// implement syscalls
+// implement syscalls, fork first
+// properly handle ring 0 - ring 3
+// make entry point outside of user programs

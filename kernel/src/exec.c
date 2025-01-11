@@ -8,22 +8,23 @@
 extern struct proc* curproc;
 
 int exec(char* path) {
-    // copy elf to current page
-    // what to do with eip and esp?
-    puts("pagestart %x\n", (int)curproc->pagestart);
 
-    char* contents = get_contents(path);
+    struct file f = get_file(path);
 
-    puts("contents start: %d\n", (int) contents);
+    memset(curproc->pagestart, PGSIZE, 0);
+    memcpy(curproc->pagestart, f.contents, f.fsize);
 
-    // asm volatile(
-    //     "movl %0, %%esp\n" // Set stack pointer
-    //     "jmp *%1\n"        // Jump to the entry point (user code)
-    //     :
-    //     : "r"(curproc->esp), "r"(curproc->eip)
-    // );
+    curproc->eip = (unsigned int)curproc->pagestart;
+
+    curproc->esp = (unsigned int)(curproc->stackpage) + PGSIZE - 1;
+    puts("eip jumping to: %x\n", curproc->eip);
+
+    asm volatile(
+        "movl %0, %%esp\n"
+        "jmp *%1\n"
+        :
+        : "r"(curproc->esp), "r"(curproc->eip)
+    );
     
-    // Elf32_Ehdr* ehdr;
-    // load_elf(ehdr);
     return 0;
 }

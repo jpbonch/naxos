@@ -29,7 +29,7 @@ char* alloc_page() {
     return ret;
 }
 
-void memcpy(char* src, char* dest, unsigned int size) {
+void memcpy(char* dest, char* src, unsigned int size) {
     for (int i = 0; i < size; i++) {
         *(dest+i) = *(src+i);
     }

@@ -1,4 +1,3 @@
-//#include "syscall_nums.h"
 
 // should be run in user mode and syscall to exec
 int main() {

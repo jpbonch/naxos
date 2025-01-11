@@ -1,30 +1,22 @@
 #include "fs.h"
 #include "puts.h"
-
-struct fsheader {
-    int numfiles;
-    int fsizes[MAXFILES];
-    char fnames[MAXFILES][11];
-    char* contents;
-} header;
+#include "mem.h"
 
 void init_fs() {
-    header = *(struct fsheader*)(FS_ADDR);
+    header = (struct fsheader*)FS_ADDR;
 }
 
-char* get_contents(char* path) {
-    puts("path: ");
-    puts(path);
-    puts("\n");
+struct file get_file(char* path) {
+    struct file f;
     unsigned int cumulative_size = 0;
-    for (int i = 0; i < header.numfiles; i++) {
-        puts("header fname: ");
-        puts(header.fnames[i]);
-        puts("\n");
-        if (strcmp(header.fnames[i], path) == 0) {
-            return header.contents + cumulative_size;
+    for (int i = 0; i < header->numfiles; i++) {
+        if (strcmp(header->fnames[i], path) == 0) {
+            f.contents = header->contents + cumulative_size;
+            memcpy(f.fname, header->fnames[i], 11);
+            f.fsize = header->fsizes[i];
+            return f;
         }
-        cumulative_size += header.fsizes[i];
+        cumulative_size += header->fsizes[i];
     }
-    return 0;
+    return f;
 }

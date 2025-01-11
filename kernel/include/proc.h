@@ -14,9 +14,10 @@ enum procstate { UNUSED, RUNNABLE, RUNNING };
 typedef struct proc {
     int pid;
     enum procstate state; 
-    int eip;
-    int esp;
+    unsigned int eip;
+    unsigned int esp;
     char* pagestart;
+    char* stackpage;
 } proc;
 
 #endif

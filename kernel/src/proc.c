@@ -7,8 +7,8 @@ struct proc* curproc = 0;
 int pid = 0;
 struct proc proctable[MAX_PROCS];
 
-extern char _binary____build_init_elf_start[];
-extern char _binary____build_init_elf_end[];
+extern char _binary____build_uinit_elf_start[];
+extern char _binary____build_uinit_elf_end[];
 
 
 void init_user() {
@@ -16,15 +16,16 @@ void init_user() {
     char* newpage = alloc_page();
     char* stack = alloc_page();
 
-    unsigned int size = (unsigned int)(_binary____build_init_elf_end - _binary____build_init_elf_start);
-    memcpy(_binary____build_init_elf_start, newpage, size);
+    unsigned int size = (unsigned int)(_binary____build_uinit_elf_end - _binary____build_uinit_elf_start);
+    memcpy(newpage, _binary____build_uinit_elf_start, size);
 
     Elf32_Ehdr* ehdr = (Elf32_Ehdr*) newpage;
     load_elf(ehdr);
 
     p->eip = ehdr->e_entry;
-    p->esp = (int)stack + PGSIZE - 1;
+    p->esp = (unsigned int)stack + PGSIZE - 1;
     p->pagestart = newpage;
+    p->stackpage = stack;
     p->state = RUNNABLE;
 }
 
@@ -35,6 +36,8 @@ void scheduler() {
                 curproc = &proctable[i];
 
                 curproc->state = RUNNING;
+                puts("Scheduler pagestart %x\n",  curproc->pagestart);
+                puts("scheduler jumping to %x\n", curproc->eip);
 
                 asm volatile(
                     "movl %0, %%esp\n" // Set stack pointer
@@ -66,7 +69,7 @@ void load_elf(Elf32_Ehdr* ehdr) {
     if (phdr[i].p_type == PT_LOAD) {
         char* src = (char*)ehdr + phdr[i].p_offset;
         char* dst = (char*) phdr[i].p_vaddr;
-        memcpy(src, dst, phdr[i].p_filesz);
+        memcpy(dst, src, phdr[i].p_filesz);
 
         if (phdr[i].p_memsz > phdr[i].p_filesz) {
             memset(dst + phdr[i].p_filesz, 0,
