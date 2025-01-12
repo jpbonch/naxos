@@ -7,7 +7,7 @@ int main() {
     // }
     *((char*)0xB8000) = 'X';
     *((char*)0xB8002) = 'X';
-
+    fork();
     while(1){}
     return 0;
 }

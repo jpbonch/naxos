@@ -2,5 +2,6 @@
 #define U_SYSCALL
 
 int exec(char* path);
+int fork();
 
 #endif

@@ -31,4 +31,6 @@ void load_idt() {
     };
 
     asm volatile ("lidt %0" : : "m"(idt_descriptor));
+
+    asm volatile ("sti");
 }

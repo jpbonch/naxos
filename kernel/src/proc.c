@@ -13,20 +13,14 @@ extern char _binary____build_uinit_elf_end[];
 
 void init_user() {
     struct proc* p = allocproc();
-    char* newpage = alloc_page();
-    char* stack = alloc_page();
 
     unsigned int size = (unsigned int)(_binary____build_uinit_elf_end - _binary____build_uinit_elf_start);
-    memcpy(newpage, _binary____build_uinit_elf_start, size);
+    memcpy(p->pagestart, _binary____build_uinit_elf_start, size);
 
-    Elf32_Ehdr* ehdr = (Elf32_Ehdr*) newpage;
+    Elf32_Ehdr* ehdr = (Elf32_Ehdr*) p->pagestart;
     load_elf(ehdr);
 
     p->eip = ehdr->e_entry;
-    p->esp = (unsigned int)stack + PGSIZE - 1;
-    p->pagestart = newpage;
-    p->stackpage = stack;
-    p->state = RUNNABLE;
 }
 
 void scheduler() {
@@ -55,7 +49,15 @@ void scheduler() {
 struct proc* allocproc() {
     for (int i = 0; i < MAX_PROCS; i++) {
         if (proctable[i].state == UNUSED) {
-            proctable[i].pid = pid++;
+            struct proc* p = &proctable[i];
+            char* newpage = alloc_page();
+            char* stack = alloc_page();
+
+            p->pid = pid++;
+            p->pagestart = newpage;
+            p->stackpage = stack;
+            p->esp = (unsigned int)p->stackpage + PGSIZE - 1;
+            p->state = RUNNABLE;
             return &proctable[i];
         }
     }
@@ -77,4 +79,18 @@ void load_elf(Elf32_Ehdr* ehdr) {
         }
         }
     }
+}
+
+int fork() {
+    puts("we forking\n");
+    curproc->state = RUNNABLE;
+
+    struct proc* newproc = allocproc();
+    memcpy(newproc->pagestart, curproc->pagestart, PGSIZE);
+    memcpy(newproc->stackpage, curproc->stackpage, PGSIZE);
+
+    // newproc->eip = ??
+    // newproc->esp = ??
+    
+    return 0;
 }

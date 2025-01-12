@@ -20,5 +20,7 @@ typedef struct proc {
     char* stackpage;
 } proc;
 
+int fork();
+
 #endif
 

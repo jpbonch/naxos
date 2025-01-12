@@ -21,3 +21,4 @@ extern void main() {
 // implement syscalls, fork first
 // properly handle ring 0 - ring 3
 // make entry point outside of user programs
+// make syscalls support multiple params
